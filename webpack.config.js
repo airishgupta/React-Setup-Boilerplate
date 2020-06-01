@@ -1,12 +1,22 @@
+const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const BUILD_DIR = path.join(__dirname, "dist");
 
 module.exports = () => {
   return {
-    entry: "./src/index.js",
+    entry: "./src/index.jsx",
     resolve: {
       extensions: [".js", ".jsx"],
     },
     mode: "development",
+    output: {
+      path: BUILD_DIR,
+      publicPath: "/",
+      filename: "[name].bundle.js",
+    },
+    devtool: "inline-source-map",
     module: {
       rules: [
         {
@@ -32,8 +42,17 @@ module.exports = () => {
       ],
     },
     devServer: {
-      port: 8080,
-      hot: true,
+      contentBase: path.join(__dirname, "dist"),
+      compress: true,
+      port: 9000,
+      historyApiFallback: true,
     },
+    plugins: [
+      new HtmlWebpackPlugin({
+        title: "DemoTemplate.html",
+        template: "src/template/index.html",
+        hash: true,
+      }),
+    ],
   };
 };
